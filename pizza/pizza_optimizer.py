@@ -73,6 +73,7 @@ class PizzaOptimizer:
             #if ((pizza.n_in) < last_n_in):
                 #print("skipping")
             #    break
+            print(score,pizza.n_in)
             last_n_in = pizza.n_in
             if score >= best:
                 best = score
