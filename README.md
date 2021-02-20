@@ -1,3 +1,3 @@
 # Hashcode 2021 Practice Round - Even more pizza
 
-![score.png](score.png)
+![score1.png](score1.png)
