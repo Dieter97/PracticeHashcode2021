@@ -46,12 +46,12 @@ class PizzaOptimizer:
     def find_n(self, n):
         ingredients = set()
         pizzas = []
-        best = -9999999
+        best = 0
         #start_time = time.time()
         tmp_pizzas = copy.copy(self.pizzas)
         #print("--- Deep copy Pizza took: %s seconds ---" % (time.time() - start_time))
         for k in range(n):
-            pizza, best  = self.find_next_improving(best, tmp_pizzas, ingredients)
+            pizza, best  = self.find_next_improving(best, tmp_pizzas, ingredients, best)
             if pizza is not None:
                 ingredients.update(pizza.ingredient_list)
                 
@@ -65,27 +65,24 @@ class PizzaOptimizer:
         del tmp_pizzas    
         return pizzas           
 
-    def find_next_improving(self, best, pizzas, used_ingredients):
+    def find_next_improving(self, best, pizzas, used_ingredients, current_score):
         best_pizza = None
         last_n_in = 0
+        strike = 0 
+        #if len(used_ingredients) > 0:
+        #    pizzas.reverse()
         for pizza in pizzas:
-            score = len(pizza.ingredient_list.union(used_ingredients))
-            #if ((pizza.n_in) < last_n_in):
+            score = len(pizza.ingredient_list.symmetric_difference(used_ingredients)) + current_score
+            if (pizza.n_in < last_n_in and pizza.n_in == score) or strike == 1000:
                 #print("skipping")
-            #    break
-            print(score,pizza.n_in)
+                break
+            # print("score: ", score, "\tIn: ", pizza.n_in)
             last_n_in = pizza.n_in
             if score >= best:
                 best = score
                 best_pizza = pizza
+                strike = 0
+            else:
+                strike += 1
         return best_pizza, best
-
-    def pizza_score(self, pizza, ingredients):
-        tmp_ingredients = copy.deepcopy(ingredients)
-        #for i in range(int(pizza.n_in)):
-        tmp_ingredients.update(pizza.ingredient_list)
-        #print(ingredients)
-        score = len(tmp_ingredients) * len(tmp_ingredients)
-        del tmp_ingredients
-        return score
 
